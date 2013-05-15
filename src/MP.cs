@@ -21,6 +21,7 @@ namespace mercadopago {
 		private readonly String client_secret;
 		private JObject access_data = null;
 		private bool sandbox = false;
+	    private static WebProxy proxy = null;
 		
 		public MP (String client_id, String client_secret) {
 			this.client_id = client_id;
@@ -36,6 +37,11 @@ namespace mercadopago {
 
 			return this.sandbox;
 		}
+
+        public void setProxy(WebProxy proxy)
+        {
+            MP.proxy = proxy;
+        }
 		
 		/**
 		 * Get Access Token for API use
@@ -243,6 +249,7 @@ namespace mercadopago {
 				
 				ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback (AcceptAllCertifications);
 				HttpWebRequest request = (HttpWebRequest)WebRequest.Create (API_BASE_URL + uri);
+			    request.Proxy = proxy;
 				request.UserAgent = "MercadoPago .NET SDK v"+MP.version;
 				request.Accept = MIME_JSON;
 				request.Method = method;
